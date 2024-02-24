@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Target
-  - Ground
+  - Kopyalar
+  - kutu
   layers:
   - Default
   - TransparentFX
