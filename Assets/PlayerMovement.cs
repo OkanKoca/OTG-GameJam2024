@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using Unity.VisualScripting;
 using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
@@ -9,9 +10,17 @@ public class PlayerMovement : MonoBehaviour
 
     public Animator animator;
 
+    public Animator colorChangeAnim;
+
     private float newX;
 
-    public Transform transform;
+    public SpriteRenderer sprite;
+
+    void Start()
+    {
+        sprite = GetComponent<SpriteRenderer>();
+
+    }
 
     // Update is called once per frame,
     void Update()
@@ -20,13 +29,18 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey("d"))
         {
             animator.SetBool("isWalking", true);
-            
-     
+            sprite.sortingOrder += 2;
+            colorChangeAnim.SetBool("isChanged", true);
+            if (CompareTag("confused"))
+            {
+                Destroy(gameObject);
+            }
         }
         
         else 
         {
             animator.SetBool("isWalking", false);
+            colorChangeAnim.SetBool("isChanged", false);
         }
     }
 }
