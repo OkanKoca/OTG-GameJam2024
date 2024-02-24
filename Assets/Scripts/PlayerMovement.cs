@@ -42,20 +42,23 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
             sr.flipX = false;
-            animator.Play("CatWalking");
+            // animator.Play("CatWalking");
+            animator.SetBool("isMoving", true);
         }
-        
-        if (Input.GetKey(KeyCode.A))
+             
+        else if (Input.GetKey(KeyCode.A))
         {
             sr.flipX = true;
-            animator.Play("CatWalking");
+            animator.SetBool("isMoving", true);
         }
+        else    
+            animator.SetBool("isMoving",false);
         
-        if (Input.GetKeyDown(KeyCode.Space) && !isJump)
+        if (Input.GetKeyDown(KeyCode.Space) && !isJump )
         {
             rb.AddForce(new Vector2(0, jumpSpeed));
             Debug.Log(jumpSpeed);
-            animator.Play("CatJumping");
+            animator.Play("CatJump01");
             isJump = true;
         }
         if (Input.GetKey(KeyCode.M) && (!meow.isPlaying && !catPurring.isPlaying))
@@ -82,6 +85,17 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
+        {
             isJump = false;
+            animator.SetBool("isOnGround", true);
+        }     
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            animator.SetBool("isOnGround", false);
+            isJump = true;
+        }
     }
 }
