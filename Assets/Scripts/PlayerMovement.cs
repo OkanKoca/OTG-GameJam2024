@@ -10,15 +10,9 @@ public class PlayerMovement : MonoBehaviour
 
     public Animator animator;
 
-    public Animator colorChangeAnim;
-
-    private float newX;
-
-    public SpriteRenderer sprite;
-
     void Start()
     {
-        sprite = GetComponent<SpriteRenderer>();
+
 
     }
 
@@ -29,18 +23,11 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey("d"))
         {
             animator.SetBool("isWalking", true);
-            sprite.sortingOrder += 2;
-            colorChangeAnim.SetBool("isChanged", true);
-            if (CompareTag("confused"))
-            {
-                Destroy(gameObject);
-            }
         }
         
         else 
         {
             animator.SetBool("isWalking", false);
-            colorChangeAnim.SetBool("isChanged", false);
         }
     }
 }
