@@ -1,33 +1,94 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Analytics;
+
 public class PlayerMovement : MonoBehaviour
 {
-
-    public float movementSpeed = 5.0f;
-
+    private float horizontalMove;
+    private Rigidbody2D rb;
+    public int walkSpeed;
+    public int jumpSpeed;
+    private SpriteRenderer sr;
+    private bool isJump;
+    [SerializeField]
+    private AudioSource meow;
+    [SerializeField]
+    private AudioSource catPurring;
+    private float catDistance;
+    private GameObject target;
+    [SerializeField]
+    private GameObject interact;
     public Animator animator;
 
     void Start()
     {
-
-
+        rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+        target = GameObject.FindWithTag("Hedef");
+        sr.flipX = false;
+        walkSpeed = 100;
+        jumpSpeed = 250;
+        isJump = false;
     }
-
-    // Update is called once per frame,
+    private void FixedUpdate()
+    {
+        horizontalMove = Input.GetAxis("Horizontal");
+        rb.velocity = new Vector3(horizontalMove * Time.deltaTime * walkSpeed, rb.velocity.y,0);
+    }
     void Update()
     {
-     
-        if (Input.GetKey("d"))
+        //catDistance = Vector2.Distance(gameObject.transform.position, target.transform.position);
+        if (Input.GetKey(KeyCode.D))
         {
-            animator.SetBool("isWalking", true);
+            sr.flipX = false;
+            animator.Play("CatWalking");
         }
         
-        else 
+        if (Input.GetKey(KeyCode.A))
         {
-            animator.SetBool("isWalking", false);
+            sr.flipX = true;
+            animator.Play("CatWalking");
         }
+        
+        if (Input.GetKeyDown(KeyCode.Space) && !isJump)
+        {
+            rb.AddForce(new Vector2(0, jumpSpeed));
+            Debug.Log(jumpSpeed);
+            animator.Play("CatJumping");
+            isJump = true;
+        }
+        if (Input.GetKey(KeyCode.M) && (!meow.isPlaying && !catPurring.isPlaying))
+        {
+            meow.Play();
+        }
+        if (Input.GetKey(KeyCode.R) && (!catPurring.isPlaying && !meow.isPlaying))
+        {
+            catPurring.Play();
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            //oturma
+        }
+        if (catDistance < 5)
+        {
+            interact.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.E))
+                Debug.Log("Etkile�im");
+        }
+        else if (catDistance >= 5)
+            interact.SetActive(false);
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+            isJump = false;
+    }
+    // private void OnCollisionExit2D(Collision2D collision)
+    // {
+    //     if (collision.gameObject.CompareTag("ground"))
+    //     {
+
+    //     }
+    // }
 }
